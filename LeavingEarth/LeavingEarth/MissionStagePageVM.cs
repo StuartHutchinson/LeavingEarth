@@ -10,7 +10,8 @@ namespace LeavingEarth
     {
         private MissionStage Stage;
         private TaskCompletionSource<MissionStage> retval = new TaskCompletionSource<MissionStage>();
-        INavigation Navigation;
+        private INavigation Navigation;
+        private string originalName; //todo - nasty
         public Command RenameStageCommand { get; }
         public Command DeleteStageCommand { get; }
         public ICommand SaveStageCommand { get; }
@@ -20,6 +21,7 @@ namespace LeavingEarth
         public MissionStagePageVM(MissionStage s)
         {
             Stage = s;
+            originalName = s.Description;
             RenameStageCommand = new Command(async () => await RenameStage());
             DeleteStageCommand = new Command(async () => await DeleteStage());
             SaveStageCommand = new Command(async () => await saveStage()); //TODO - do these need to await?
@@ -29,22 +31,31 @@ namespace LeavingEarth
 
         private async Task RenameStage()
         {
-            
+            var newName = await Stage.GetMission().GetRenamedStageName(Navigation, StageDescription);
+            if (newName != null)
+            {
+                StageDescription = newName;
+                OnPropertyChanged(nameof(StageDescription));
+            }
         }
 
         private async Task DeleteStage()
         {
-
+            Stage.GetMission().DeleteStage(Stage);
+            await Navigation.PopAsync(); //go back to the mission view
+            retval.SetResult(null);
         }
 
         private async Task saveStage()
         {
+            Stage.Description = StageDescription; //todo - bit nasty - is there a nicer way?
             await Navigation.PopAsync();
             retval.SetResult(Stage);
         }
 
         private async Task discardStage()
         {
+            Stage.Description = originalName;
             await Navigation.PopAsync();
             retval.SetResult(null);
         }

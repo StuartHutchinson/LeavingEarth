@@ -21,6 +21,15 @@ namespace LeavingEarth
             get { return (short)Difficulty; }
         }
 
+        public Func<Mission> OnGetMission;
+        public Mission GetMission()
+        {
+            if (OnGetMission == null)
+                throw new Exception("OnGetMission handler is not assigned");
+
+            return OnGetMission();
+        }
+
         public MissionStage()
         {
             Solution = new MissionStageSolution();

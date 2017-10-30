@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using Xamarin.Forms;
 
 namespace LeavingEarth
 {
@@ -25,6 +26,62 @@ namespace LeavingEarth
                 Stages = new ObservableCollection<MissionStage>();
             }
             Stages.Add(stage);
+            stage.OnGetMission += new Func<Mission>(GetMission);
+        }
+
+        private Mission GetMission()
+        {
+            return this;
+        }
+
+        public async Task<string> GetNewStageName(INavigation navigation)
+        {
+            return await GetStageName(navigation, Name + " - New Stage");
+        }
+        public async Task<string> GetRenamedStageName(INavigation navigation, string originalName)
+        {
+            return await GetStageName(navigation, "Rename stage - " + originalName);
+        }
+        private async Task<string> GetStageName(INavigation navigation, string dialogTitle)
+        {
+            bool valid = false;
+            string stageName = null;
+            while (!valid)
+            {
+                stageName = await Dialog.InputBox(navigation, dialogTitle, "Enter Stage Name", "");
+                if (stageName == null)
+                {
+                    //cancelled
+                    valid = true;
+                }
+                else
+                {
+                    if (stageName.Trim().Length == 0)
+                    {
+                        MessagingCenter.Send<Mission>(this, Message.BlankStageName);
+                    }
+                    else if (DuplicateStageName(stageName))
+                    {
+                        MessagingCenter.Send<Mission>(this, Message.DuplicateStageName);
+                    }
+                    else
+                    {
+                        valid = true;
+                    }
+                }
+            }
+            return stageName;
+        }
+        private bool DuplicateStageName(string nameToTest)
+        {
+            var duplicates = Stages.Where(s => s.Description.Equals(nameToTest));
+            return duplicates.Count() > 0;
+        }
+
+        //todo - this should confirm with the user and return a bool
+        public void DeleteStage(MissionStage stage)
+        {
+            Stages.Remove(stage);
         }
     }
 }
