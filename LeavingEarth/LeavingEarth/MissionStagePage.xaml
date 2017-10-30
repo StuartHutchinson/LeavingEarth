@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LeavingEarth.MissionStagePage"
+             Title="{Binding StageDescription}">
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness">
+            <On Platform="iOS" Value="20, 40, 20, 20" />
+            <On Platform="Android, WinPhone, Windows" Value="20" />
+        </OnPlatform>
+    </ContentPage.Padding>
+    <ContentPage.Content>
+        <StackLayout>
+            <!--<Entry Text="{Binding StageDescription}"/>-->
+            <!--<StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                <Button Text="Rename Stage" Command="{Binding RenameStageCommand}" HorizontalOptions="StartAndExpand"/>
+                <Button Text="Delete Stage" Command="{Binding DeleteStageCommand}" HorizontalOptions="EndAndExpand"/>
+            </StackLayout>-->
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Difficulty" VerticalOptions="StartAndExpand"/>
+                <Picker VerticalOptions="StartAndExpand" ItemsSource="{Binding DifficultyLevelInts}" SelectedItem="{Binding DifficultyInt, Mode=TwoWay}" WidthRequest="20" HeightRequest="40"/>
+                <Label Text="Payload (T)" VerticalOptions="StartAndExpand" HorizontalOptions="EndAndExpand"/>
+                <Entry Text="{Binding StagePayload}" Keyboard="Numeric" VerticalOptions="StartAndExpand" HorizontalOptions="EndAndExpand" WidthRequest="40" HeightRequest="40"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Solution"/>
+                <Button Text="Add Rockets" FontSize="Small" Command="{Binding AddRocketsCommand}"/>
+            </StackLayout>
+            <Label Text="{Binding SolutionDescription}" BackgroundColor="{Binding SolutionColour}"/>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                <Button Text="OK" Command="{Binding SaveStageCommand}"/>
+                <Button Text="Cancel" Command="{Binding DiscardStageCommand}"/>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

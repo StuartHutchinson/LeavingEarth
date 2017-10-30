@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LeavingEarth.Dialog">
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness">
+            <On Platform="iOS" Value="20, 40, 20, 20" />
+            <On Platform="Android, WinPhone, Windows" Value="20" />
+        </OnPlatform>
+    </ContentPage.Padding>
+    <StackLayout>
+        <Label Text="{Binding dialogText}"/>
+        <Entry x:Name="entryBox" Text="{Binding inputText}"/>
+        <StackLayout Orientation="Horizontal" x:Name="buttonList">
+            <Button Text="OK" x:Name="ButtonOK" Clicked="SaveData"/>
+            <Button Text="Cancel" x:Name="ButtonCancel" Clicked="Close"/>
+        </StackLayout>
+    </StackLayout>
+    <!--<StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+        <Label Text="{Binding dialogText}" VerticalOptions="Start" HorizontalOptions="Center"
+                HeightRequest="20"/>
+        <Entry x:Name="entryBox" Text="{Binding inputText}" VerticalOptions="Center"
+                HorizontalOptions="Center" />
+        <ListView Rotation="270" x:Name="buttonList" ItemsSource="{Binding buttons}" ItemSelected="ButtonClicked"
+                VerticalOptions="End" HorizontalOptions="Center"/>
+    </StackLayout>-->
+</ContentPage>

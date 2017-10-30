@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:LeavingEarth"
+             x:Class="LeavingEarth.MissionDetailPage"
+             Title="{Binding MissionName}">
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness">
+            <On Platform="iOS" Value="20, 40, 20, 20" />
+            <On Platform="Android, WinPhone, Windows" Value="20" />
+        </OnPlatform>
+    </ContentPage.Padding>
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                <Button Text="Add Stage" Command="{Binding AddStageCommand}" HorizontalOptions="Start"/>
+                <Button Text="Delete Mission" Command="{Binding DeleteMissionCommand}" HorizontalOptions="End"/>
+            </StackLayout>
+            <ListView ItemsSource="{Binding Stages}" local:ItemTappedAttached.Command="{Binding ViewStageCommand}" SelectedItem="{Binding SelectedStage, Mode=TwoWay}" HasUnevenRows="True">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <StackLayout>
+                                    <Label Text="{Binding Description}" HorizontalOptions="CenterAndExpand"/>
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="{Binding DifficultyValue, StringFormat='Difficulty {0:F0}'}" HorizontalOptions="CenterAndExpand"/>
+                                        <Label Text="{Binding Payload, StringFormat='Payload {0:F0}T'}" HorizontalOptions="CenterAndExpand"/>
+                                    </StackLayout>
+                                    <Label Text="{Binding SolutionDescription}" HorizontalOptions="Center" BackgroundColor="{Binding Colour}"/>
+                                </StackLayout>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
