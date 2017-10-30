@@ -15,16 +15,21 @@ namespace LeavingEarth
         public MissionDetailPage(Mission m)
         {
             InitializeComponent();
-            MessagingCenter.Subscribe<MissionDetailPageVM>(this, Message.BlankStageName, BlankStageName);
-            MessagingCenter.Subscribe<MissionDetailPageVM>(this, Message.DuplicateStageName, DuplicateStageName);
+            //These are now sent from Mission
+            //MessagingCenter.Subscribe<MissionDetailPageVM>(this, Message.BlankStageName, BlankStageName);
+            //MessagingCenter.Subscribe<MissionDetailPageVM>(this, Message.DuplicateStageName, DuplicateStageName);
+            MessagingCenter.Subscribe<Mission>(this, Message.BlankStageName, BlankStageName);
+            MessagingCenter.Subscribe<Mission>(this, Message.DuplicateStageName, DuplicateStageName);
             BindingContext = new MissionDetailPageVM(m, Navigation);
         }
 
-        async void BlankStageName(MissionDetailPageVM vm)
+        //async void BlankStageName(MissionDetailPageVM vm)
+        async void BlankStageName(Mission m)
         {
             await DisplayAlert("Error", "You must enter a stage name", "OK");
         }
-        async void DuplicateStageName(MissionDetailPageVM vm)
+        //async void DuplicateStageName(MissionDetailPageVM vm)
+        async void DuplicateStageName(Mission m)
         {
             await DisplayAlert("Error", "This mission already contains a stage with that name", "OK");
         }

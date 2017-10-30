@@ -11,11 +11,10 @@
     </ContentPage.Padding>
     <ContentPage.Content>
         <StackLayout>
-            <!--<Entry Text="{Binding StageDescription}"/>-->
-            <!--<StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
                 <Button Text="Rename Stage" Command="{Binding RenameStageCommand}" HorizontalOptions="StartAndExpand"/>
                 <Button Text="Delete Stage" Command="{Binding DeleteStageCommand}" HorizontalOptions="EndAndExpand"/>
-            </StackLayout>-->
+            </StackLayout>
             <StackLayout Orientation="Horizontal">
                 <Label Text="Difficulty" VerticalOptions="StartAndExpand"/>
                 <Picker VerticalOptions="StartAndExpand" ItemsSource="{Binding DifficultyLevelInts}" SelectedItem="{Binding DifficultyInt, Mode=TwoWay}" WidthRequest="20" HeightRequest="40"/>
