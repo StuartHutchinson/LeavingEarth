@@ -10,21 +10,21 @@
             <Label Text="{Binding RequiredPayload, StringFormat='Required Payload: {0:F0}T'}" HorizontalOptions="CenterAndExpand" FontAttributes="Bold"/>
             <Label Text="{Binding CurrentCapacity, StringFormat='Current Capacity: {0:F2}T'}" HorizontalOptions="CenterAndExpand" BackgroundColor="{Binding CapacityColour}"/>
             <!--<Label Text="Available Rockets (Capacity)" HorizontalOptions="CenterAndExpand"/>-->
-            <ListView ItemsSource="{Binding AvailableRockets }">
+            <ListView ItemsSource="{Binding AvailableRockets}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Horizontal">
+                            <StackLayout Orientation="Horizontal" BackgroundColor="{Binding Colour}">
                                 <!--<Label Text="{Binding NameAndCapacity}" HorizontalOptions="StartAndExpand" FontAttributes="Bold" WidthRequest="200"/>-->
                                 <Label FormattedText="{Binding FormattedDescription}" HorizontalOptions="StartAndExpand" WidthRequest="200"/>
                                 <Button Image="remove.png"
                                         WidthRequest="60"
-                                        CommandParameter="{Binding Name}"
+                                        CommandParameter="{Binding Type}"
                                         Command="{Binding Path=BindingContext.RemoveRocketCommand, Source={x:Reference Name = AddRocketsPage}}"/>
                                 <Label Text="{Binding NumberUsed, Mode=TwoWay}" HorizontalOptions="CenterAndExpand" FontAttributes="Bold"/>
                                 <Button Image="add.png" 
                                         WidthRequest="60"
-                                        CommandParameter="{Binding Name}"
+                                        CommandParameter="{Binding Type}"
                                         Command="{Binding Path=BindingContext.AddRocketCommand, Source={x:Reference Name = AddRocketsPage}}"/>
                             </StackLayout>
                         </ViewCell>
