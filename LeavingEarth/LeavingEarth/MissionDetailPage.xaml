@@ -12,10 +12,12 @@
     </ContentPage.Padding>
     <ContentPage.Content>
         <StackLayout>
-            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
-                <Button Text="Add Stage" Command="{Binding AddStageCommand}" HorizontalOptions="Start"/>
-                <Button Text="Delete Mission" Command="{Binding DeleteMissionCommand}" HorizontalOptions="End"/>
-            </StackLayout>
+            <!--<StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                <Button Text="Add Stage" Command="{Binding AddStageCommand}" HorizontalOptions="Start" FontSize="Small"/>
+                <Button Text="Copy Mission" Command="{Binding CopyMissionCommand}" HorizontalOptions="CenterAndExpand" FontSize="Small"/>
+                <Button Text="Delete Mission" Command="{Binding DeleteMissionCommand}" HorizontalOptions="End" FontSize="Small"/>
+            </StackLayout>-->
+            <Button Text="Add Stage" Command="{Binding AddStageCommand}" HorizontalOptions="CenterAndExpand" FontSize="Small"/>
             <ListView ItemsSource="{Binding Stages}" local:ItemTappedAttached.Command="{Binding ViewStageCommand}" SelectedItem="{Binding SelectedStage, Mode=TwoWay}" HasUnevenRows="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -34,6 +36,10 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                <Button Text="Copy Mission" Command="{Binding CopyMissionCommand}" HorizontalOptions="Start" FontSize="Small"/>
+                <Button Text="Delete Mission" Command="{Binding DeleteMissionCommand}" HorizontalOptions="End" FontSize="Small"/>
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -17,9 +12,10 @@ namespace LeavingEarth
         public string MissionName { get { return Mission.Name; } }
         public ObservableCollection<MissionStage> Stages { get; set; }
 
-        public ICommand AddStageCommand { get; }
-        public ICommand ViewStageCommand { get; }
-        public ICommand DeleteMissionCommand { get; }
+        public Command AddStageCommand { get; }
+        public Command ViewStageCommand { get; }
+        public Command DeleteMissionCommand { get; }
+        public Command CopyMissionCommand { get; }
         public MissionStage SelectedStage { get; set; }
 
         public MissionDetailPageVM(Mission m, INavigation nav)
@@ -30,6 +26,7 @@ namespace LeavingEarth
             AddStageCommand = new Command(NewStage);
             ViewStageCommand = new Command<MissionStage>(ViewStage);
             DeleteMissionCommand = new Command(DeleteMission);
+            CopyMissionCommand = new Command(CopyMission);
         }
 
         private async void NewStage()
@@ -89,6 +86,21 @@ namespace LeavingEarth
         private async void DeleteMission()
         {
             App.Missions.Remove(Mission);
+            await navigation.PopAsync();
+        }
+
+        private async void CopyMission()
+        {
+            string missionName = await Mission.GetNewMissionName(navigation);
+            if (missionName == null)
+            {
+                return; //cancelled
+            }
+
+            Mission copy = new Mission(Mission);
+            copy.Name = missionName;
+            App.Missions.Add(copy);
+            //pop this page off the stack (back to the mission list)
             await navigation.PopAsync();
         }
 

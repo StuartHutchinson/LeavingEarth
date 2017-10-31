@@ -68,6 +68,7 @@ namespace LeavingEarth
             //null;
             Solution = new MissionStageSolution(original.Solution);
             Solution.OnGetMissionStage += new Func<MissionStage>(GetMissionStage);
+            OnGetMission = original.OnGetMission;
         }
         
         public bool HasBeenSolved()

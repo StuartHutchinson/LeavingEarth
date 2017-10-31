@@ -12,10 +12,24 @@ namespace LeavingEarth
         public string Name { get; set; }
         public ObservableCollection<MissionStage> Stages { get; set; }
 
-        public Mission(string name)
+        public Mission()
+        {
+            Stages = new ObservableCollection<MissionStage>();
+        }
+
+        public Mission(string name) : this()
         {
             Name = name;
-            Stages = new ObservableCollection<MissionStage>();
+        }
+
+        public Mission(Mission original) : this()
+        {
+            Name = original.Name;
+            foreach(MissionStage stage in original.Stages)
+            {
+                var newStage = new MissionStage(stage);
+                Stages.Add(newStage);
+            }
         }
 
         public void AddStage(MissionStage stage)
@@ -83,23 +97,41 @@ namespace LeavingEarth
             Stages.Remove(stage);
         }
 
-        //these do a bit of extra work to fix the functions which cannot be serialiazed
-        public static Mission JsonDeserialize(string line)
+        public static async Task<string> GetNewMissionName(INavigation navigation)
         {
-            Mission m = JsonConvert.DeserializeObject<Mission>(line);
-            foreach (MissionStage stage in m.Stages)
+            bool valid = false;
+            string missionName = null;
+            while (!valid)
             {
-                stage.OnGetMission = new Func<Mission>(m.GetMission);
+                missionName = await Dialog.InputBox(navigation, "New Mission", "Enter Mission Name", "Mission to ");
+                if (missionName == null)
+                {
+                    //cancelled
+                    valid = true;
+                }
+                else
+                {
+                    if (missionName.Trim().Length == 0)
+                    {
+                        MessagingCenter.Send<Mission>(new Mission(), Message.BlankMissionName);
+                    }
+                    else if (DuplicateMissionName(missionName))
+                    {
+                        MessagingCenter.Send<Mission>(new Mission(), Message.DuplicateMissionName);
+                    }
+                    else
+                    {
+                        valid = true;
+                    }
+                }
             }
-            return m;
+            return missionName;
         }
-        public void PrepareForSave()
+        private static bool DuplicateMissionName(string nameToTest)
         {
-            foreach (MissionStage stage in Stages)
-            {
-                stage.OnGetMission -= GetMission;
-                stage.PrepareForSave();
-            }
+            var duplicates = App.Missions.Where(m => m.Name.Equals(nameToTest));
+            return duplicates.Count() > 0;
         }
+
     }
 }
