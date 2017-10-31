@@ -8,9 +8,11 @@ namespace LeavingEarth
 
         private RocketAtlas()
         {
-            Name = Enum.GetName(typeof(RocketType), RocketType.Atlas);
+            //Name = Enum.GetName(typeof(RocketType), RocketType.Atlas);
+            Type = RocketType.Atlas;
             maxPayloads = new double[10] { 0, 23, (double)(9*2+1)/2, 5, (double)(2*4+3)/4, (double)(1*5+2)/5, (double)1/2, 0, 0, 0 };
             Mass = 4;
+            Cost = 5;
             Available = true;
         }
 

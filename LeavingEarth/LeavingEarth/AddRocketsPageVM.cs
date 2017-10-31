@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -30,7 +32,7 @@ namespace LeavingEarth
                     if (r.Available
                       && r.GetMaxPayload(GetDifficulty()) > 0)
                     {
-                        available.Add(new AddRocketsPageVM_AvailableRocket(r, GetDifficulty()));
+                        available.Add(new AddRocketsPageVM_AvailableRocket(r, GetDifficulty(), this));
                     }
                 }
                 return available;
@@ -104,6 +106,11 @@ namespace LeavingEarth
             OnPropertyChanged(nameof(SolutionRocketList));
             OnPropertyChanged(nameof(CurrentCapacity));
             OnPropertyChanged(nameof(CapacityColour));
+            //foreach (AddRocketsPageVM_AvailableRocket availableRocket in AvailableRockets)
+            //{
+            //    availableRocket.Update();
+            //}
+            OnPropertyChanged(nameof(AvailableRockets));
             RemoveRocketCommand.ChangeCanExecute();
             OKCommand.ChangeCanExecute();
         }
@@ -121,15 +128,29 @@ namespace LeavingEarth
         }
         #endregion
 
-        public class AddRocketsPageVM_AvailableRocket
+        protected short GetNumRocketsUsed(Rocket.RocketType type)
         {
+            return Solution.UsedRockets[type];
+        }
+
+        public class AddRocketsPageVM_AvailableRocket// : INotifyPropertyChanged
+        {
+            //public event PropertyChangedEventHandler PropertyChanged;
+
+            //protected void OnPropertyChanged([CallerMemberName] string name = "")
+            //{
+            //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            //}
+
             private Rocket rocket;
             private DifficultyLevel difficulty;
+            private AddRocketsPageVM viewModel;
 
-            public AddRocketsPageVM_AvailableRocket(Rocket r, DifficultyLevel d)
+            public AddRocketsPageVM_AvailableRocket(Rocket r, DifficultyLevel d, AddRocketsPageVM vm)
             {
                 rocket = r;
                 difficulty = d;
+                viewModel = vm;
             }
 
             public string NameAndCapacity
@@ -139,7 +160,42 @@ namespace LeavingEarth
                     return rocket.Name + " (" + rocket.GetMaxPayload(difficulty).ToString("#.##") + "T)";
                 }
             }
-            public string Name { get { return rocket.Name; } }
+            
+            public string Name { get { return rocket.Name; } }//needed for the add/remove command parameter
+
+            public short NumberUsed
+            {
+                get { return viewModel.GetNumRocketsUsed(rocket.Type); }
+            }
+
+            public FormattedString FormattedDescription
+            {
+                get
+                {
+                    return new FormattedString
+                    {
+                        Spans =
+                        {
+                            new Span{Text = NameAndCapacity, FontAttributes=FontAttributes.Bold},
+                            new Span{Text=Environment.NewLine },
+                            new Span{Text=CostAndMass }
+                        }
+                    };
+                }
+            }
+
+            public string CostAndMass
+            {
+                get
+                {
+                    return "Cost $" + rocket.Cost + " Mass " + rocket.Mass + "T";
+                }
+            }
+
+            //public void Update()
+            //{
+            //    OnPropertyChanged(nameof(NumberUsed));
+            //}
         }
     }
 }

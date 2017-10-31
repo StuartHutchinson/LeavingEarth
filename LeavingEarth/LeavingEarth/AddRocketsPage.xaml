@@ -7,30 +7,34 @@
              Title="Add Rockets">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Available Rockets (Capacity)" HorizontalOptions="CenterAndExpand"/>
-            <ListView ItemsSource="{Binding AvailableRockets}">
+            <Label Text="{Binding RequiredPayload, StringFormat='Required Payload: {0:F0}T'}" HorizontalOptions="CenterAndExpand" FontAttributes="Bold"/>
+            <Label Text="{Binding CurrentCapacity, StringFormat='Current Capacity: {0:F2}T'}" HorizontalOptions="CenterAndExpand" BackgroundColor="{Binding CapacityColour}"/>
+            <!--<Label Text="Available Rockets (Capacity)" HorizontalOptions="CenterAndExpand"/>-->
+            <ListView ItemsSource="{Binding AvailableRockets }">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <StackLayout Orientation="Horizontal">
-                                <Label Text="{Binding NameAndCapacity}" HorizontalOptions="StartAndExpand"/>
-                                <!--<Button Image="add.png"-->
-                                <Button Text="Add" CommandParameter="{Binding Name}"
-                                                   Command="{Binding Path=BindingContext.AddRocketCommand, Source={x:Reference Name = AddRocketsPage}}"
-                                        HeightRequest="20" WidthRequest="60" FontSize="Small"/>
-                                <!--<Button Image="remove.png"-->
-                                <Button Text="Remove" CommandParameter="{Binding Name}"
-                                                      Command="{Binding Path=BindingContext.RemoveRocketCommand, Source={x:Reference Name = AddRocketsPage}}"
-                                        HeightRequest="20" WidthRequest="100" FontSize="Small"/>
+                                <!--<Label Text="{Binding NameAndCapacity}" HorizontalOptions="StartAndExpand" FontAttributes="Bold" WidthRequest="200"/>-->
+                                <Label FormattedText="{Binding FormattedDescription}" HorizontalOptions="StartAndExpand" WidthRequest="200"/>
+                                <Button Image="remove.png"
+                                        WidthRequest="60"
+                                        CommandParameter="{Binding Name}"
+                                        Command="{Binding Path=BindingContext.RemoveRocketCommand, Source={x:Reference Name = AddRocketsPage}}"/>
+                                <Label Text="{Binding NumberUsed, Mode=TwoWay}" HorizontalOptions="CenterAndExpand" FontAttributes="Bold"/>
+                                <Button Image="add.png" 
+                                        WidthRequest="60"
+                                        CommandParameter="{Binding Name}"
+                                        Command="{Binding Path=BindingContext.AddRocketCommand, Source={x:Reference Name = AddRocketsPage}}"/>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Label Text="Current Solution" HorizontalOptions="CenterAndExpand"/>
+            <!--<Label Text="Current Solution" HorizontalOptions="CenterAndExpand"/>
             <Label Text="{Binding SolutionRocketList}"/>
             <Label Text="{Binding RequiredPayload, StringFormat='Required Payload: {0:F0}T'}" HorizontalOptions="CenterAndExpand" FontAttributes="Bold"/>
-            <Label Text="{Binding CurrentCapacity, StringFormat='Current Capacity: {0:F2}T'}" HorizontalOptions="CenterAndExpand" BackgroundColor="{Binding CapacityColour}"/>
+            <Label Text="{Binding CurrentCapacity, StringFormat='Current Capacity: {0:F2}T'}" HorizontalOptions="CenterAndExpand" BackgroundColor="{Binding CapacityColour}"/>-->
             <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
                 <Button Text="OK" Command="{Binding OKCommand}"/>
                 <Button Text="Cancel" Command="{Binding CancelCommand}"/>
