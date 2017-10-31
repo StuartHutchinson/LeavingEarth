@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using Xamarin.Forms;
+using Newtonsoft.Json;
 
 namespace LeavingEarth
 {
@@ -82,6 +81,25 @@ namespace LeavingEarth
         public void DeleteStage(MissionStage stage)
         {
             Stages.Remove(stage);
+        }
+
+        //these do a bit of extra work to fix the functions which cannot be serialiazed
+        public static Mission JsonDeserialize(string line)
+        {
+            Mission m = JsonConvert.DeserializeObject<Mission>(line);
+            foreach (MissionStage stage in m.Stages)
+            {
+                stage.OnGetMission = new Func<Mission>(m.GetMission);
+            }
+            return m;
+        }
+        public void PrepareForSave()
+        {
+            foreach (MissionStage stage in Stages)
+            {
+                stage.OnGetMission -= GetMission;
+                stage.PrepareForSave();
+            }
         }
     }
 }

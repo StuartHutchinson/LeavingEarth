@@ -14,9 +14,11 @@
                         <ViewCell>
                             <StackLayout Orientation="Horizontal">
                                 <Label Text="{Binding NameAndCapacity}" HorizontalOptions="StartAndExpand"/>
+                                <!--<Button Image="add.png"-->
                                 <Button Text="Add" CommandParameter="{Binding Name}"
                                                    Command="{Binding Path=BindingContext.AddRocketCommand, Source={x:Reference Name = AddRocketsPage}}"
                                         HeightRequest="20" WidthRequest="60" FontSize="Small"/>
+                                <!--<Button Image="remove.png"-->
                                 <Button Text="Remove" CommandParameter="{Binding Name}"
                                                       Command="{Binding Path=BindingContext.RemoveRocketCommand, Source={x:Reference Name = AddRocketsPage}}"
                                         HeightRequest="20" WidthRequest="100" FontSize="Small"/>
