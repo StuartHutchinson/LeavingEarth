@@ -36,6 +36,12 @@ namespace LeavingEarth
             return r.Mass;
         }
 
+        public static short GetCost(RocketType type)
+        {
+            Rocket r = GetRocketForType(type);
+            return r.Cost;
+        }
+
         public static Rocket GetRocketForType(RocketType type)
         {
             Rocket rocket = null;

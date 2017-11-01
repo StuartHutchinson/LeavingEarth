@@ -22,6 +22,10 @@ namespace LeavingEarth
         {
             // Handle when your app starts
             Missions = DependencyService.Get<IFileIO>().LoadMissions(); //todo - fix this
+            foreach(Mission m in Missions)
+            {
+                m.EnsureLinked();
+            }
             //Missions = new ObservableCollection<Mission>();
         }
 

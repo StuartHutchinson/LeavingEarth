@@ -17,7 +17,10 @@
                 <Button Text="Copy Mission" Command="{Binding CopyMissionCommand}" HorizontalOptions="CenterAndExpand" FontSize="Small"/>
                 <Button Text="Delete Mission" Command="{Binding DeleteMissionCommand}" HorizontalOptions="End" FontSize="Small"/>
             </StackLayout>-->
-            <Button Text="Add Stage" Command="{Binding AddStageCommand}" HorizontalOptions="CenterAndExpand" FontSize="Small"/>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                <Button Text="Add Stage" Command="{Binding AddStageCommand}" HorizontalOptions="StartAndExpand" FontSize="Small"/>
+                <Button Text="Shopping List" Command="{Binding ShoppingListCommand}" HorizontalOptions="EndAndExpand" FontSize="Small"/>
+            </StackLayout>
             <ListView ItemsSource="{Binding Stages}" local:ItemTappedAttached.Command="{Binding ViewStageCommand}" SelectedItem="{Binding SelectedStage, Mode=TwoWay}" HasUnevenRows="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>

@@ -18,6 +18,14 @@ namespace LeavingEarth
         public string SolutionRocketList { get { return Solution.RocketList(); } }
         public Color CapacityColour { get { return Solution.IsSufficient() ? Color.LightGreen : Color.PaleVioletRed; } }
 
+        public string SolutionCostAndMass
+        {
+            get
+            {
+                return "Total Solution Cost $" + Solution.CalculateCost() + ", Mass " + Solution.CalculateMass() + "T";
+            }
+        }
+
         public ObservableCollection<AddRocketsPageVM_AvailableRocket> AvailableRockets
         {
             get
@@ -114,6 +122,7 @@ namespace LeavingEarth
             //    availableRocket.Update();
             //}
             OnPropertyChanged(nameof(AvailableRockets));
+            OnPropertyChanged(nameof(SolutionCostAndMass));
             RemoveRocketCommand.ChangeCanExecute();
             OKCommand.ChangeCanExecute();
         }

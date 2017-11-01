@@ -16,6 +16,7 @@ namespace LeavingEarth
         public Command ViewStageCommand { get; }
         public Command DeleteMissionCommand { get; }
         public Command CopyMissionCommand { get; }
+        public Command ShoppingListCommand { get; }
         public MissionStage SelectedStage { get; set; }
 
         public MissionDetailPageVM(Mission m, INavigation nav)
@@ -27,6 +28,7 @@ namespace LeavingEarth
             ViewStageCommand = new Command<MissionStage>(ViewStage);
             DeleteMissionCommand = new Command(DeleteMission);
             CopyMissionCommand = new Command(CopyMission);
+            ShoppingListCommand = new Command(ViewShoppingList);
         }
 
         private async void NewStage()
@@ -87,6 +89,11 @@ namespace LeavingEarth
         {
             App.Missions.Remove(Mission);
             await navigation.PopAsync();
+        }
+
+        private async void ViewShoppingList()
+        {
+            await navigation.PushAsync(new ShoppingListPage(Mission));
         }
 
         private async void CopyMission()

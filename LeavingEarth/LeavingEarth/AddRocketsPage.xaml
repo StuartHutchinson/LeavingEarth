@@ -9,6 +9,7 @@
         <StackLayout>
             <Label Text="{Binding RequiredPayload, StringFormat='Required Payload: {0:F0}T'}" HorizontalOptions="CenterAndExpand" FontAttributes="Bold"/>
             <Label Text="{Binding CurrentCapacity, StringFormat='Current Capacity: {0:F2}T'}" HorizontalOptions="CenterAndExpand" BackgroundColor="{Binding CapacityColour}"/>
+            <Label Text="{Binding SolutionCostAndMass}" HorizontalOptions="CenterAndExpand"/>
             <!--<Label Text="Available Rockets (Capacity)" HorizontalOptions="CenterAndExpand"/>-->
             <ListView ItemsSource="{Binding AvailableRockets}">
                 <ListView.ItemTemplate>

@@ -23,7 +23,7 @@
             </StackLayout>
             <StackLayout Orientation="Horizontal">
                 <Label Text="Solution"/>
-                <Button Text="Add Rockets" FontSize="Small" Command="{Binding AddRocketsCommand}"/>
+                <Button Text="Edit Solution" FontSize="Small" Command="{Binding AddRocketsCommand}"/>
             </StackLayout>
             <Label Text="{Binding SolutionDescription}" BackgroundColor="{Binding SolutionColour}"/>
             <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">

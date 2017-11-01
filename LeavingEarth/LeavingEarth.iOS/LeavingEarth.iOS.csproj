@@ -118,6 +118,12 @@
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Messier16.Forms.Controls, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Messier16.Forms.Controls.1.1.0\lib\Xamarin.iOS10\Messier16.Forms.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Messier16.Forms.iOS.Controls, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Messier16.Forms.Controls.1.1.0\lib\Xamarin.iOS10\Messier16.Forms.iOS.Controls.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\netstandard1.3\Newtonsoft.Json.dll</HintPath>

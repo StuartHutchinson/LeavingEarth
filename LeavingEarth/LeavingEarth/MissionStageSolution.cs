@@ -97,6 +97,19 @@ namespace LeavingEarth
             return mass;
         }
 
+        public short CalculateCost()
+        {
+            short cost = 0;
+            var types = Enum.GetValues(typeof(Rocket.RocketType));
+            foreach (Rocket.RocketType type in types)
+            {
+                var numRockets = UsedRockets[type];
+                var rocketCost = Rocket.GetCost(type);
+                cost += (short)(numRockets * rocketCost);
+            }
+            return cost;
+        }
+
         public string RocketList()
         {
             var list = "";

@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:Messier="clr-namespace:Messier16.Forms.Controls;assembly=Messier16.Forms.Controls"
+             x:Class="LeavingEarth.ShoppingListPage"
+             Title="{Binding MissionName}">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                <Label Text="{Binding TotalCost}" FontSize="Large" FontAttributes="Bold" HorizontalOptions="StartAndExpand"/>
+                <Label Text="{Binding RemainingCost}" FontSize="Large" FontAttributes="Bold" HorizontalOptions="End"/>
+            </StackLayout>
+            <ListView ItemsSource="{Binding RequiredRockets}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="{Binding NameAndCost}" FontSize="Large" HorizontalOptions="StartAndExpand"/>
+                                <Messier:Checkbox Checked="{Binding Bought}" HorizontalOptions="End"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

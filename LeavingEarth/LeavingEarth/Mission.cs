@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using Xamarin.Forms;
-using Newtonsoft.Json;
 
 namespace LeavingEarth
 {
@@ -11,6 +10,7 @@ namespace LeavingEarth
     {
         public string Name { get; set; }
         public ObservableCollection<MissionStage> Stages { get; set; }
+        public MissionShoppingList ShoppingList { get; set; }
 
         public Mission()
         {
@@ -28,6 +28,7 @@ namespace LeavingEarth
             foreach(MissionStage stage in original.Stages)
             {
                 var newStage = new MissionStage(stage);
+                newStage.OnGetMission += new Func<Mission>(GetMission);
                 Stages.Add(newStage);
             }
         }
@@ -40,6 +41,19 @@ namespace LeavingEarth
             }
             Stages.Add(stage);
             stage.OnGetMission += new Func<Mission>(GetMission);
+        }
+
+        //when loading from disk, make sure all function handlers are set
+        public void EnsureLinked()
+        {
+            foreach (MissionStage stage in Stages)
+            {
+                if (stage.OnGetMission == null)
+                {
+                    stage.OnGetMission += new Func<Mission>(GetMission);
+                }
+                stage.EnsureLinked();
+            }
         }
 
         private Mission GetMission()

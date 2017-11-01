@@ -30,7 +30,8 @@ namespace LeavingEarth.Droid
                 foreach (Mission m in missions)
                 {
                     //m.PrepareForSave();
-                    var json = JsonConvert.SerializeObject(m, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+                    var json = JsonConvert.SerializeObject(m, new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                                                                                           NullValueHandling = NullValueHandling.Ignore});
                     strm.WriteLine(json);
                 }
             }

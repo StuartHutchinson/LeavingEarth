@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace LeavingEarth
@@ -22,15 +18,15 @@ namespace LeavingEarth
         {
             get { return (short)Difficulty; }
         }
-
-        [JsonIgnore]
-        public Func<Mission> OnGetMission;
-
+        
         [JsonIgnore]
         public string SolutionDescription { get { return Solution.Description; } }
 
         [JsonIgnore]
         public Color Colour { get { return HasBeenSolved() ? Color.LightGreen : Color.PaleVioletRed; } }
+
+        [JsonIgnore]
+        public Func<Mission> OnGetMission;
 
         public Mission GetMission()
         {
@@ -47,6 +43,14 @@ namespace LeavingEarth
             Solution.OnGetMissionStage += new Func<MissionStage>(GetMissionStage);
         }
 
+        public void EnsureLinked()
+        {
+            if (Solution.OnGetMissionStage == null)
+            {
+                Solution.OnGetMissionStage += new Func<MissionStage>(GetMissionStage);
+            }
+        }
+
         private MissionStage GetMissionStage()
         {
             return this;
@@ -58,7 +62,7 @@ namespace LeavingEarth
             //Solution = new MissionStageSolution(this);
         }
 
-        public MissionStage (MissionStage original)
+        public MissionStage(MissionStage original)
         {
             Description = original.Description;
             Difficulty = original.Difficulty;
