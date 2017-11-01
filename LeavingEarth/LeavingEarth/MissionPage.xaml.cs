@@ -13,15 +13,15 @@ namespace LeavingEarth
         {
             BindingContext = new MissionPageVM(Navigation);            
             InitializeComponent();
-            MessagingCenter.Subscribe<MissionPageVM>(this, Message.BlankMissionName, BlankMissionName);
-            MessagingCenter.Subscribe<MissionPageVM>(this, Message.DuplicateMissionName, DuplicateMissionName);
+            MessagingCenter.Subscribe<Mission>(this, Message.BlankMissionName, BlankMissionName);
+            MessagingCenter.Subscribe<Mission>(this, Message.DuplicateMissionName, DuplicateMissionName);
         }
 
-        async void BlankMissionName(MissionPageVM vm)
+        async void BlankMissionName(Mission m)
         {
             await DisplayAlert("Error", "You must enter a mission name", "OK");
         }
-        async void DuplicateMissionName(MissionPageVM vm)
+        async void DuplicateMissionName(Mission m)
         {
             await DisplayAlert("Error", "There is already a mission with that name", "OK");
         }

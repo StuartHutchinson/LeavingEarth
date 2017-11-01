@@ -21,13 +21,17 @@ namespace LeavingEarth
         protected override void OnStart()
         {
             // Handle when your app starts
-            //Missions = DependencyService.Get<IFileIO>().LoadMissions(); //todo - fix this
-            Missions = new ObservableCollection<Mission>();
+            Missions = DependencyService.Get<IFileIO>().LoadMissions(); //todo - fix this
+            foreach(Mission m in Missions)
+            {
+                m.EnsureLinked();
+            }
+            //Missions = new ObservableCollection<Mission>();
         }
 
         protected override void OnSleep()
         {
-            //DependencyService.Get<IFileIO>().SaveMissions(Missions); //todo - fix this
+            DependencyService.Get<IFileIO>().SaveMissions(Missions); //todo - fix this
         }
 
         protected override void OnResume()

@@ -18,6 +18,14 @@ namespace LeavingEarth
         public string SolutionRocketList { get { return Solution.RocketList(); } }
         public Color CapacityColour { get { return Solution.IsSufficient() ? Color.LightGreen : Color.PaleVioletRed; } }
 
+        public string SolutionCostAndMass
+        {
+            get
+            {
+                return "Total Solution Cost $" + Solution.CalculateCost() + ", Mass " + Solution.CalculateMass() + "T";
+            }
+        }
+
         public ObservableCollection<AddRocketsPageVM_AvailableRocket> AvailableRockets
         {
             get
@@ -27,11 +35,10 @@ namespace LeavingEarth
                 foreach (Rocket.RocketType type in types)
                 {
                     Rocket r = Rocket.GetRocketForType(type);
-                    if (r.Available
-                      && r.GetMaxPayload(GetDifficulty()) > 0)
-                    {
-                        available.Add(new AddRocketsPageVM_AvailableRocket(r, GetDifficulty()));
-                    }
+                    //include all rockets, but don't allow adding of unavailable or unusable ones
+                    //if (r.Available
+                    //  && r.GetMaxPayload(GetDifficulty()) > 0)
+                    available.Add(new AddRocketsPageVM_AvailableRocket(r, GetDifficulty(), this));
                 }
                 return available;
             }
@@ -51,8 +58,8 @@ namespace LeavingEarth
             navigation = nav;
             RequiredPayload = sol.GetMissionStage().Payload;
             CurrentCapacity = sol.CalculateCapacity();
-            AddRocketCommand = new Command<string>(AddRocket);
-            RemoveRocketCommand = new Command<string>(RemoveRocket, HasRocketsOfType);
+            AddRocketCommand = new Command<Rocket.RocketType>(AddRocket, RocketCanBeUsed);
+            RemoveRocketCommand = new Command<Rocket.RocketType>(RemoveRocket, HasRocketsOfType);
             OKCommand = new Command(OKPressed, RequirementsMet);
             CancelCommand = new Command(CancelPressed);
         }
@@ -68,14 +75,20 @@ namespace LeavingEarth
             return Solution.GetMissionStage().Difficulty;
         }
 
-        private bool HasRocketsOfType(string rocketNameStr)
+        private bool HasRocketsOfType(Rocket.RocketType rocketType)
         {
-            if (rocketNameStr == null)
-            {
-                return false;
-            }
-            Rocket.RocketType rocketType = Rocket.GetRocketType(rocketNameStr);
+            //if (rocketNameStr == null)
+            //{
+            //    return false;
+            //}
+            //Rocket.RocketType rocketType = Rocket.GetRocketType(rocketNameStr);
             return Solution.UsedRockets[rocketType] > 0;
+        }
+
+        private bool RocketCanBeUsed(Rocket.RocketType type)
+        {
+            Rocket r = Rocket.GetRocketForType(type);
+            return r.Available && r.GetMaxPayload(GetDifficulty()) > 0;
         }
 
         private bool RequirementsMet()
@@ -83,17 +96,17 @@ namespace LeavingEarth
             return Solution.IsSufficient();
         }
 
-        private void AddRocket(string rocketNameStr)
+        private void AddRocket(Rocket.RocketType rocketType)
         {
-            Rocket.RocketType rocketType = Rocket.GetRocketType(rocketNameStr);
+            //Rocket.RocketType rocketType = Rocket.GetRocketType(rocketNameStr);
             Solution.AddRocket(rocketType);            
             CurrentCapacity += Rocket.GetMaxPayload(rocketType, GetDifficulty());
             Update();
         }
 
-        private void RemoveRocket(string rocketNameStr)
+        private void RemoveRocket(Rocket.RocketType rocketType)
         {
-            Rocket.RocketType rocketType = Rocket.GetRocketType(rocketNameStr);
+            //Rocket.RocketType rocketType = Rocket.GetRocketType(rocketNameStr);
             Solution.RemoveRocket(rocketType);
             CurrentCapacity -= Rocket.GetMaxPayload(rocketType, GetDifficulty());
             Update();
@@ -104,6 +117,12 @@ namespace LeavingEarth
             OnPropertyChanged(nameof(SolutionRocketList));
             OnPropertyChanged(nameof(CurrentCapacity));
             OnPropertyChanged(nameof(CapacityColour));
+            //foreach (AddRocketsPageVM_AvailableRocket availableRocket in AvailableRockets)
+            //{
+            //    availableRocket.Update();
+            //}
+            OnPropertyChanged(nameof(AvailableRockets));
+            OnPropertyChanged(nameof(SolutionCostAndMass));
             RemoveRocketCommand.ChangeCanExecute();
             OKCommand.ChangeCanExecute();
         }
@@ -121,25 +140,86 @@ namespace LeavingEarth
         }
         #endregion
 
-        public class AddRocketsPageVM_AvailableRocket
+        protected short GetNumRocketsUsed(Rocket.RocketType type)
         {
+            return Solution.UsedRockets[type];
+        }
+
+        public class AddRocketsPageVM_AvailableRocket// : INotifyPropertyChanged
+        {
+            //public event PropertyChangedEventHandler PropertyChanged;
+
+            //protected void OnPropertyChanged([CallerMemberName] string name = "")
+            //{
+            //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            //}
+
             private Rocket rocket;
             private DifficultyLevel difficulty;
+            private AddRocketsPageVM viewModel;
 
-            public AddRocketsPageVM_AvailableRocket(Rocket r, DifficultyLevel d)
+            public AddRocketsPageVM_AvailableRocket(Rocket r, DifficultyLevel d, AddRocketsPageVM vm)
             {
                 rocket = r;
                 difficulty = d;
+                viewModel = vm;
             }
 
             public string NameAndCapacity
             {
                 get
                 {
-                    return rocket.Name + " (" + rocket.GetMaxPayload(difficulty).ToString("#.##") + "T)";
+                    return rocket.Name + " (" + rocket.GetMaxPayload(difficulty).ToString("0.##") + "T)";
                 }
             }
-            public string Name { get { return rocket.Name; } }
+            
+            public string Name { get { return rocket.Name; } }//needed for the add/remove command parameter
+            public Rocket.RocketType Type { get { return rocket.Type; } }
+
+            public short NumberUsed
+            {
+                get { return viewModel.GetNumRocketsUsed(rocket.Type); }
+            }
+
+            public FormattedString FormattedDescription
+            {
+                get
+                {
+                    string availableStr = "";
+                    if (!rocket.Available)
+                    {
+                        availableStr = " (Unavailable)";
+                    }
+                    else if (rocket.GetMaxPayload(viewModel.GetDifficulty()) <= 0)
+                    {
+                        availableStr = " (Insufficient thrust)";
+                    }
+                    return new FormattedString
+                    {
+                        Spans =
+                        {
+                            new Span{Text = NameAndCapacity + availableStr, FontAttributes=FontAttributes.Bold},
+                            new Span{Text=Environment.NewLine },
+                            new Span{Text=CostAndMass }
+                        }
+                    };
+                }
+            }
+
+            public string CostAndMass
+            {
+                get
+                {
+                    return "Cost $" + rocket.Cost + " Mass " + rocket.Mass + "T";
+                }
+            }
+
+            public Color Colour { get { return viewModel.RocketCanBeUsed(Type)? Color.Default : Color.PaleVioletRed; } }
+
+            //public void Update()
+            //{
+            //    OnPropertyChanged(nameof(NumberUsed));
+            //}
         }
     }
 }

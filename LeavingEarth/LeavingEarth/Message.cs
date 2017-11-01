@@ -8,9 +8,10 @@ namespace LeavingEarth
 {
     public static class Message
     {
-        public static string BlankMissionName        = "BlankMissionName";
-        public static string DuplicateMissionName    = "DuplicateMissionName";
-        public static string BlankStageName          = "BlankStageName";
-        public static string DuplicateStageName      = "DuplicateStageName";
+        public static string BlankMissionName           = "BlankMissionName";
+        public static string DuplicateMissionName       = "DuplicateMissionName";
+        public static string BlankStageName             = "BlankStageName";
+        public static string DuplicateStageName         = "DuplicateStageName";
+        public static string ShoppingListReset          = "ShoppingListReset";
     }
 }

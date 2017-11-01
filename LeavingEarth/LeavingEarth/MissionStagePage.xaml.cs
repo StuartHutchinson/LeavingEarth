@@ -20,6 +20,19 @@ namespace LeavingEarth
         {
             BindingContext = ViewModel = new MissionStagePageVM(stage);            
             InitializeComponent();
+            MessagingCenter.Subscribe<MissionStagePageVM>(this, Message.ShoppingListReset, ShoppingListReset);
+        }
+        protected override void OnDisappearing()
+        {
+            MessagingCenter.Unsubscribe<MissionStagePageVM>(this, Message.ShoppingListReset);
+        }
+        private async void ShoppingListReset(MissionStagePageVM vm)
+        {
+            bool proceed = await DisplayAlert("Shopping List", "Changing the rockets will reset the shopping list for this mission", "OK", "Cancel");
+            if (proceed)
+            {
+                vm.ReallyAddRockets();
+            }
         }
     }
 }

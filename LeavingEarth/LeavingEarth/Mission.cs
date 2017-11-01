@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using Xamarin.Forms;
@@ -12,11 +10,27 @@ namespace LeavingEarth
     {
         public string Name { get; set; }
         public ObservableCollection<MissionStage> Stages { get; set; }
+        public MissionShoppingList ShoppingList { get; set; }
 
-        public Mission(string name)
+        public Mission()
+        {
+            Stages = new ObservableCollection<MissionStage>();
+        }
+
+        public Mission(string name) : this()
         {
             Name = name;
-            Stages = new ObservableCollection<MissionStage>();
+        }
+
+        public Mission(Mission original) : this()
+        {
+            Name = original.Name;
+            foreach(MissionStage stage in original.Stages)
+            {
+                var newStage = new MissionStage(stage);
+                newStage.OnGetMission += new Func<Mission>(GetMission);
+                Stages.Add(newStage);
+            }
         }
 
         public void AddStage(MissionStage stage)
@@ -27,6 +41,19 @@ namespace LeavingEarth
             }
             Stages.Add(stage);
             stage.OnGetMission += new Func<Mission>(GetMission);
+        }
+
+        //when loading from disk, make sure all function handlers are set
+        public void EnsureLinked()
+        {
+            foreach (MissionStage stage in Stages)
+            {
+                if (stage.OnGetMission == null)
+                {
+                    stage.OnGetMission += new Func<Mission>(GetMission);
+                }
+                stage.EnsureLinked();
+            }
         }
 
         private Mission GetMission()
@@ -83,5 +110,42 @@ namespace LeavingEarth
         {
             Stages.Remove(stage);
         }
+
+        public static async Task<string> GetNewMissionName(INavigation navigation)
+        {
+            bool valid = false;
+            string missionName = null;
+            while (!valid)
+            {
+                missionName = await Dialog.InputBox(navigation, "New Mission", "Enter Mission Name", "Mission to ");
+                if (missionName == null)
+                {
+                    //cancelled
+                    valid = true;
+                }
+                else
+                {
+                    if (missionName.Trim().Length == 0)
+                    {
+                        MessagingCenter.Send<Mission>(new Mission(), Message.BlankMissionName);
+                    }
+                    else if (DuplicateMissionName(missionName))
+                    {
+                        MessagingCenter.Send<Mission>(new Mission(), Message.DuplicateMissionName);
+                    }
+                    else
+                    {
+                        valid = true;
+                    }
+                }
+            }
+            return missionName;
+        }
+        private static bool DuplicateMissionName(string nameToTest)
+        {
+            var duplicates = App.Missions.Where(m => m.Name.Equals(nameToTest));
+            return duplicates.Count() > 0;
+        }
+
     }
 }

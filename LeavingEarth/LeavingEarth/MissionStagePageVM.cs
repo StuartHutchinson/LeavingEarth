@@ -60,8 +60,19 @@ namespace LeavingEarth
             retval.SetResult(null);
         }
 
-        private async void AddRockets()
+        private void AddRockets()
         {
+            if (Stage.GetMission().ShoppingList != null)
+            {
+                MessagingCenter.Send<MissionStagePageVM>(this, Message.ShoppingListReset);
+            }
+            else
+            {
+                ReallyAddRockets();
+            }
+        }
+        public async void ReallyAddRockets()
+        { 
             //await Navigation.PushModalAsync(new AddRocketsPage(Stage.Solution));
             var updatedSolution = await AddRocketsPageVM.Go(Navigation, Stage.Solution);
             if (updatedSolution != null)
@@ -69,6 +80,7 @@ namespace LeavingEarth
                 Stage.Solution = updatedSolution;
                 OnPropertyChanged(nameof(SolutionDescription));
                 OnPropertyChanged(nameof(SolutionColour));
+                Stage.GetMission().ShoppingList = null; //this will be repopulated when going to the shopping list screen
             }
         }
         
