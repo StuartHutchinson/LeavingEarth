@@ -1,8 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LeavingEarth
 {
@@ -11,7 +9,27 @@ namespace LeavingEarth
         public Dictionary<Rocket.RocketType, short> UsedRockets { get; }
 
         //public MissionStage Stage { get; set; }
+        [JsonIgnore]
         public Func<MissionStage> OnGetMissionStage;
+
+        [JsonIgnore]
+        public string Description
+        {
+            get
+            {
+                var desc = RocketList();
+                if (desc.Length > 0)
+                {
+                    desc += Environment.NewLine;
+                }
+                desc += "Solution Mass " + CalculateMass() + "T";
+                return desc;
+            }
+            set { }
+        }
+
+        //public short Mass { get; set; }
+
         public MissionStage GetMissionStage()
         {
             if (OnGetMissionStage == null)
@@ -79,6 +97,19 @@ namespace LeavingEarth
             return mass;
         }
 
+        public short CalculateCost()
+        {
+            short cost = 0;
+            var types = Enum.GetValues(typeof(Rocket.RocketType));
+            foreach (Rocket.RocketType type in types)
+            {
+                var numRockets = UsedRockets[type];
+                var rocketCost = Rocket.GetCost(type);
+                cost += (short)(numRockets * rocketCost);
+            }
+            return cost;
+        }
+
         public string RocketList()
         {
             var list = "";
@@ -103,22 +134,7 @@ namespace LeavingEarth
             }
             return str;
         }
-
-        public string Description
-        {
-            get
-            {
-                var desc = RocketList();
-                if (desc.Length > 0)
-                {
-                    desc += Environment.NewLine;
-                }                
-                desc += "Solution Mass " + CalculateMass() + "T";
-                return desc;
-            }
-            set { }
-        }
-
+        
         public void RemoveRocket(Rocket.RocketType rocketType)
         {
             UsedRockets[rocketType]--;
@@ -128,11 +144,5 @@ namespace LeavingEarth
             UsedRockets[rocketType]++;
         }
 
-        public short Mass { get; set; }
-        
-        //public string DescriptionWithMass()
-        //{
-        //    return Description + " (" + CalculateMass() + "T)";
-        //}
     }
 }

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
+using System;
 using Xamarin.Forms;
 
 namespace LeavingEarth
 {
     public enum DifficultyLevel { Unset, One, Two, Three, Four, Five, Six, Seven, Eight, Nine }
-
+    
     public class MissionStage
     {
         public string Description { get; set; }
@@ -16,9 +13,27 @@ namespace LeavingEarth
         public short Payload { get; set; }
         public MissionStageSolution Solution { get; set; }
 
+        [JsonIgnore]
         public short DifficultyValue
         {
             get { return (short)Difficulty; }
+        }
+        
+        [JsonIgnore]
+        public string SolutionDescription { get { return Solution.Description; } }
+
+        [JsonIgnore]
+        public Color Colour { get { return HasBeenSolved() ? Color.LightGreen : Color.PaleVioletRed; } }
+
+        [JsonIgnore]
+        public Func<Mission> OnGetMission;
+
+        public Mission GetMission()
+        {
+            if (OnGetMission == null)
+                throw new Exception("OnGetMission handler is not assigned");
+
+            return OnGetMission();
         }
 
         public MissionStage()
@@ -26,6 +41,14 @@ namespace LeavingEarth
             Solution = new MissionStageSolution();
             //Solution.OnGetMissionStage += new Func<MissionStage>(delegate { return this; });
             Solution.OnGetMissionStage += new Func<MissionStage>(GetMissionStage);
+        }
+
+        public void EnsureLinked()
+        {
+            if (Solution.OnGetMissionStage == null)
+            {
+                Solution.OnGetMissionStage += new Func<MissionStage>(GetMissionStage);
+            }
         }
 
         private MissionStage GetMissionStage()
@@ -39,7 +62,7 @@ namespace LeavingEarth
             //Solution = new MissionStageSolution(this);
         }
 
-        public MissionStage (MissionStage original)
+        public MissionStage(MissionStage original)
         {
             Description = original.Description;
             Difficulty = original.Difficulty;
@@ -48,17 +71,19 @@ namespace LeavingEarth
             //new MissionStageSolution(original.Solution) :
             //null;
             Solution = new MissionStageSolution(original.Solution);
-            Solution.OnGetMissionStage += new Func<MissionStage>(delegate { return this; });
+            Solution.OnGetMissionStage += new Func<MissionStage>(GetMissionStage);
+            OnGetMission = original.OnGetMission;
         }
-
-        //public string SolutionDescription { get { return Solution.DescriptionWithMass(); } }
-        public string SolutionDescription { get { return Solution.Description; } }
-
+        
         public bool HasBeenSolved()
         {
             return Solution.IsSufficient();
         }
 
-        public Color Colour { get { return HasBeenSolved() ? Color.LightGreen : Color.PaleVioletRed; } }
+        //unsubscribe the event so json doesn't attempt to serialize the function 
+        public void PrepareForSave()
+        {
+            Solution.OnGetMissionStage -= GetMissionStage;
+        }
     }
 }

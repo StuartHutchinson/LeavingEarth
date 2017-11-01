@@ -30,7 +30,8 @@ namespace LeavingEarth
 
         protected async void NewMission()
         {
-            string missionName = await GetNewMissionName();
+            //string missionName = await GetNewMissionName();
+            string missionName = await Mission.GetNewMissionName(Navigation);
             if (missionName == null)
             {
                 return; //cancelled
@@ -41,41 +42,41 @@ namespace LeavingEarth
             ViewMission(mission);
         }
 
-        private async Task<string> GetNewMissionName()
-        {
-            bool valid = false;
-            string missionName = null;
-            while (!valid)
-            {
-                missionName = await Dialog.InputBox(Navigation, "New Mission", "Enter Mission Name", "Mission to ");
-                if (missionName == null)
-                {
-                    //cancelled
-                    valid = true;
-                }
-                else
-                {
-                    if (missionName.Trim().Length == 0)
-                    {
-                        MessagingCenter.Send<MissionPageVM>(this, Message.BlankMissionName);
-                    }
-                    else if (DuplicateMissionName(missionName))
-                    {
-                        MessagingCenter.Send<MissionPageVM>(this, Message.DuplicateMissionName);
-                    }
-                    else
-                    {
-                        valid = true;
-                    }
-                }
-            }
-            return missionName;
-        }
-        private bool DuplicateMissionName(string nameToTest)
-        {
-            var duplicates = Missions.Where(m => m.Name.Equals(nameToTest));
-            return duplicates.Count() > 0;
-        }
+        //private async Task<string> GetNewMissionName()
+        //{
+        //    bool valid = false;
+        //    string missionName = null;
+        //    while (!valid)
+        //    {
+        //        missionName = await Dialog.InputBox(Navigation, "New Mission", "Enter Mission Name", "Mission to ");
+        //        if (missionName == null)
+        //        {
+        //            //cancelled
+        //            valid = true;
+        //        }
+        //        else
+        //        {
+        //            if (missionName.Trim().Length == 0)
+        //            {
+        //                MessagingCenter.Send<MissionPageVM>(this, Message.BlankMissionName);
+        //            }
+        //            else if (DuplicateMissionName(missionName))
+        //            {
+        //                MessagingCenter.Send<MissionPageVM>(this, Message.DuplicateMissionName);
+        //            }
+        //            else
+        //            {
+        //                valid = true;
+        //            }
+        //        }
+        //    }
+        //    return missionName;
+        //}
+        //private bool DuplicateMissionName(string nameToTest)
+        //{
+        //    var duplicates = Missions.Where(m => m.Name.Equals(nameToTest));
+        //    return duplicates.Count() > 0;
+        //}
 
         private async void ViewMission(Mission m)
         {

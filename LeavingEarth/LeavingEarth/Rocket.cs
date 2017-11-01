@@ -12,9 +12,12 @@ namespace LeavingEarth
 
         protected double[] maxPayloads;
 
-        public string Name { get; set; }
+        public RocketType Type { get; set; }
+        //public string Name { get; set; }
+        public string Name { get { return Enum.GetName(typeof(RocketType), Type); } }
         public bool Available { get; set; }
         public short Mass { get; set; }
+        public short Cost { get; set; }
 
         public double GetMaxPayload(DifficultyLevel difficulty)
         {
@@ -31,6 +34,12 @@ namespace LeavingEarth
         {
             Rocket r = GetRocketForType(type);
             return r.Mass;
+        }
+
+        public static short GetCost(RocketType type)
+        {
+            Rocket r = GetRocketForType(type);
+            return r.Cost;
         }
 
         public static Rocket GetRocketForType(RocketType type)

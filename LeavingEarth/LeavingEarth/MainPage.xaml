@@ -13,6 +13,7 @@
     <ContentPage.Content>
         <StackLayout>
             <Button Text="Mission List" Command="{Binding ViewMissionListCommand}"/>
+            <Button Text="Available Rockets" Command="{Binding ViewAvailableRocketsCommand}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

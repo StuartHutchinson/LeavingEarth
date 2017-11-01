@@ -4,6 +4,7 @@ using System.Linq;
 
 using Foundation;
 using UIKit;
+using Messier16.Forms.iOS.Controls;
 
 namespace LeavingEarth.iOS
 {
@@ -23,6 +24,7 @@ namespace LeavingEarth.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
+            CheckboxRenderer.Init();
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);
