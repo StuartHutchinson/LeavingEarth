@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="2" android:versionName="1.1" package="com.companyname.LeavingEarth" android:installLocation="auto">
 	<uses-sdk android:minSdkVersion="15" />
-	<application android:label="Leaving Earth" android:theme="@style/MyTheme" android:icon="@drawable/Rocket_Ship"></application>
+	<application android:label="Leaving Earth" android:theme="@style/MyTheme" android:icon="@drawable/icon"></application>
 </manifest>
